@@ -8,17 +8,22 @@ using System.Threading.Tasks;
 
 namespace ApiRestful.Infraestructura.Repositorios
 {
-    class PostMysqlRepository : IPostRepository
+    public class PostMysqlRepository : IPostRepository
     {
+        public Task<Post> GetPost(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<Post>> GetPosts()
         {
             var posts = Enumerable.Range(1, 10).Select(x => new Post()
             {
                 PostId = x,
                 UserId = x * 3,
-                Descripcion = $"Descripcion para {x} de SQLServer",
-                Imagen = $"http://ok.com/imagen/{x}",
-                Fecha = DateTime.Now
+                Description = $"Description para {x} de Mysql",
+                Image = $"http://ok.com/imagen/{x}",
+                Date = DateTime.Now
             });
             await Task.Delay(10);
             return posts;

@@ -5,25 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 using ApiRestful.core.Entidades;
 using ApiRestful.core.Interfaces;
+using ApiRestful.Infraestructura.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiRestful.Infraestructura.Repositorios
 {
     public class PostRepository : IPostRepository
     {
+        private readonly ApiRestfulContext _dbContext;
+        public PostRepository(ApiRestfulContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<Post> GetPost(int id)
+        {
+            var post = await _dbContext.Posts.FirstOrDefaultAsync(x => x.PostId == id);
+            return post;
+        }
+
         public async Task<IEnumerable<Post>> GetPosts()
         {
-            IEnumerable<Post> posts = null;
-            await Task.Run(() =>
-            {
-               posts = Enumerable.Range(1, 10).Select(x => new Post()
-               {
-                   PostId = x,
-                   UserId = x * 3,
-                   Descripcion = $"Descripcion para {x} de SQLServer",
-                   Imagen = $"http://ok.com/imagen/{x}",
-                   Fecha = DateTime.Now
-               });
-            });
+            var posts = await _dbContext.Posts.ToListAsync();            
             return posts;
         }
     }

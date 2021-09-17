@@ -1,7 +1,11 @@
+using ApiRestful.core.Interfaces;
+using ApiRestful.Infraestructura.Data;
+using ApiRestful.Infraestructura.Repositorios;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +36,10 @@ namespace ApiRestful.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiRestful.Api", Version = "v1" });
             });
+            //dependencias
+            services.AddDbContext<ApiRestfulContext>(opciones =>
+                opciones.UseSqlServer(Configuration.GetConnectionString("ApiRestful")));
+            services.AddTransient<IPostRepository, PostRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
