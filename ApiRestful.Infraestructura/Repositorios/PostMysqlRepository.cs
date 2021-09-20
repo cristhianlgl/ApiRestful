@@ -10,12 +10,12 @@ namespace ApiRestful.Infraestructura.Repositorios
 {
     public class PostMysqlRepository : IPostRepository
     {
-        public Task<Post> GetPost(int id)
+        public Task<Post> GetPostAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Post>> GetPosts()
+        public async Task<IEnumerable<Post>> GetPostsAsync()
         {
             var posts = Enumerable.Range(1, 10).Select(x => new Post()
             {
@@ -27,6 +27,11 @@ namespace ApiRestful.Infraestructura.Repositorios
             });
             await Task.Delay(10);
             return posts;
+        }
+
+        public Task InsertPostAsync(Post post)
+        {
+            throw new NotImplementedException();
         }
     }
 }

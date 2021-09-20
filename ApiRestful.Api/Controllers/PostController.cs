@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiRestful.Infraestructura.Repositorios;
 using ApiRestful.core.Interfaces;
+using ApiRestful.core.Entidades;
 
 namespace ApiRestful.Api.Controllers
 {
@@ -20,15 +21,22 @@ namespace ApiRestful.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var posts = await _postRepository.GetPosts(); 
+            var posts = await _postRepository.GetPostsAsync(); 
             return Ok(posts);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
-            var posts = await _postRepository.GetPost(id);
+            var posts = await _postRepository.GetPostAsync(id);
             return Ok(posts);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> InsertPost(Post post)
+        {
+            await _postRepository.InsertPostAsync(post);
+            return Ok();
         }
     }
 }

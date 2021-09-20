@@ -9,7 +9,8 @@ namespace ApiRestful.core.Interfaces
 {
     public interface IPostRepository
     {
-        Task<IEnumerable<Post>> GetPosts();
-        Task<Post> GetPost(int id);
+        Task<IEnumerable<Post>> GetPostsAsync();
+        Task<Post> GetPostAsync(int id);
+        Task InsertPostAsync(Post post);
     }
 }

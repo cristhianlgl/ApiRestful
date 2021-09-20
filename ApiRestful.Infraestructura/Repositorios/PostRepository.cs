@@ -18,16 +18,22 @@ namespace ApiRestful.Infraestructura.Repositorios
             _dbContext = dbContext;
         }
 
-        public async Task<Post> GetPost(int id)
+        public async Task<Post> GetPostAsync(int id)
         {
             var post = await _dbContext.Posts.FirstOrDefaultAsync(x => x.PostId == id);
             return post;
         }
 
-        public async Task<IEnumerable<Post>> GetPosts()
+        public async Task<IEnumerable<Post>> GetPostsAsync()
         {
             var posts = await _dbContext.Posts.ToListAsync();            
             return posts;
+        }
+
+        public async Task InsertPostAsync(Post post)
+        {
+            _dbContext.Posts.Add(post);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
