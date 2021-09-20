@@ -1,6 +1,7 @@
 using ApiRestful.core.Interfaces;
 using ApiRestful.Infraestructura.Data;
 using ApiRestful.Infraestructura.Repositorios;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,6 +41,7 @@ namespace ApiRestful.Api
             services.AddDbContext<ApiRestfulContext>(opciones =>
                 opciones.UseSqlServer(Configuration.GetConnectionString("ApiRestful")));
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddMvc().AddFluentValidation(option => option.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

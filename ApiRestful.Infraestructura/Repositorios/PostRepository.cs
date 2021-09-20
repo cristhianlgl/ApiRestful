@@ -32,6 +32,7 @@ namespace ApiRestful.Infraestructura.Repositorios
 
         public async Task InsertPostAsync(Post post)
         {
+            post.PostId = 0;
             _dbContext.Posts.Add(post);
             await _dbContext.SaveChangesAsync();
         }
