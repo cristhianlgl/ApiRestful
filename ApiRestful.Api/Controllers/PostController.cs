@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ApiRestful.Infraestructura.Repositorios;
+﻿using ApiRestful.core.DTOs;
 using ApiRestful.core.Interfaces;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using ApiRestful.core.Entidades;
 
 namespace ApiRestful.Api.Controllers
@@ -14,27 +13,32 @@ namespace ApiRestful.Api.Controllers
     public class PostController : Controller
     {
         private readonly IPostRepository _postRepository;
-        public PostController(IPostRepository postRepository)
+        private readonly IMapper _mapper;
+        public PostController(IPostRepository postRepository, IMapper mapper)
         {
             _postRepository = postRepository;
+            _mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var posts = await _postRepository.GetPostsAsync(); 
-            return Ok(posts);
+            var posts = await _postRepository.GetPostsAsync();
+            var postsDTOs = _mapper.Map<IEnumerable<PostDTO>>(posts);            
+            return Ok(postsDTOs);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
-            var posts = await _postRepository.GetPostAsync(id);
-            return Ok(posts);
+            var post = await _postRepository.GetPostAsync(id);
+            var postDTO = _mapper.Map<PostDTO>(post);
+            return Ok(postDTO);
         }
 
         [HttpPost]
-        public async Task<IActionResult> InsertPost(Post post)
+        public async Task<IActionResult> InsertPost(PostDTO postDTO)
         {
+            var post = _mapper.Map<Post>(postDTO);
             await _postRepository.InsertPostAsync(post);
             return Ok();
         }
