@@ -12,5 +12,7 @@ namespace ApiRestful.core.Interfaces
         Task<IEnumerable<Post>> GetPostsAsync();
         Task<Post> GetPostAsync(int id);
         Task InsertPostAsync(Post post);
+        Task<bool> UpdatePostAsync(Post post);
+        Task<bool> DeletePostAsync(int id);
     }
 }

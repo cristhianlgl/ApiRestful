@@ -36,5 +36,22 @@ namespace ApiRestful.Infraestructura.Repositorios
             _dbContext.Posts.Add(post);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<bool> UpdatePostAsync(Post post)
+        {
+            var postCurrent = await GetPostAsync(post.PostId);
+            postCurrent.Description = post.Description;
+            postCurrent.Date = post.Date;
+            postCurrent.Image = post.Image;
+            var result = await _dbContext.SaveChangesAsync();
+            return Convert.ToBoolean(result);
+        }
+        public async Task<bool> DeletePostAsync(int id)
+        {
+            var postCurrent = await GetPostAsync(id);
+             _dbContext.Posts.Remove(postCurrent);
+            var result = await _dbContext.SaveChangesAsync();
+            return Convert.ToBoolean(result);
+        }
     }
 }

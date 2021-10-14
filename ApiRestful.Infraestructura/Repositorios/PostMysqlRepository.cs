@@ -33,5 +33,15 @@ namespace ApiRestful.Infraestructura.Repositorios
         {
             throw new NotImplementedException();
         }
+
+        Task<bool> IPostRepository.DeletePostAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IPostRepository.UpdatePostAsync(Post post)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
