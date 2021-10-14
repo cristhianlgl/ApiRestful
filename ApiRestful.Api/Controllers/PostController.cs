@@ -1,11 +1,11 @@
-﻿using ApiRestful.core.DTOs;
+﻿using ApiRestful.Api.Responses;
+using ApiRestful.core.DTOs;
+using ApiRestful.core.Entidades;
 using ApiRestful.core.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using ApiRestful.core.Entidades;
-using ApiRestful.Api.Responses;
+using System.Threading.Tasks;
 
 namespace ApiRestful.Api.Controllers
 {
@@ -13,17 +13,17 @@ namespace ApiRestful.Api.Controllers
     [ApiController]
     public class PostController : Controller
     {
-        private readonly IPostRepository _postRepository;
+        private readonly IPostService _postService;
         private readonly IMapper _mapper;
-        public PostController(IPostRepository postRepository, IMapper mapper)
+        public PostController(IPostService postService, IMapper mapper)
         {
-            _postRepository = postRepository;
+            _postService = postService;
             _mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var posts = await _postRepository.GetPostsAsync();
+            var posts = await _postService.GetPostsAsync();
             var postsDTOs = _mapper.Map<IEnumerable<PostDTO>>(posts);
             var resp = new ResponseApi<IEnumerable<PostDTO>>(postsDTOs, true);
             return Ok(resp);
@@ -32,7 +32,7 @@ namespace ApiRestful.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
-            var post = await _postRepository.GetPostAsync(id);
+            var post = await _postService.GetPostAsync(id);
             var postDTO = _mapper.Map<PostDTO>(post);
             var resp = new ResponseApi<PostDTO>(postDTO, true);
             return Ok(resp);
@@ -42,7 +42,7 @@ namespace ApiRestful.Api.Controllers
         public async Task<IActionResult> InsertPost(PostDTO postDTO)
         {
             var post = _mapper.Map<Post>(postDTO);
-            await _postRepository.InsertPostAsync(post);
+            await _postService.InsertPostAsync(post);
             var postDTOCurrent = _mapper.Map<PostDTO>(post);
             var resp = new ResponseApi<PostDTO>(postDTOCurrent, true);
             return Ok(resp);
@@ -53,7 +53,7 @@ namespace ApiRestful.Api.Controllers
         {
             var post = _mapper.Map<Post>(postDTO);
             post.PostId = id;
-            var result = await _postRepository.UpdatePostAsync(post);
+            var result = await _postService.UpdatePostAsync(post);
             var resp = new ResponseApi<bool>(result, result);
             return Ok(resp);
         }
@@ -61,7 +61,7 @@ namespace ApiRestful.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var result = await _postRepository.DeletePostAsync(id);
+            var result = await _postService.DeletePostAsync(id);
             var resp = new ResponseApi<bool>(result, result);
             return Ok(resp);
         }

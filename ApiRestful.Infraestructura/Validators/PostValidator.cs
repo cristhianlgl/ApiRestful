@@ -14,7 +14,7 @@ namespace ApiRestful.Infraestructura.Validators
         {
             RuleFor(post => post.Description)
                 .NotNull()
-                .Length(1, 15);
+                .Length(1, 255);
 
             RuleFor(post => post.Date)
                 .NotNull();                
