@@ -37,6 +37,7 @@ namespace ApiRestful.Api
                 opciones.UseSqlServer(Configuration.GetConnectionString("ApiRestful")));
             
             services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
             services.AddMvc().AddFluentValidation(option => option.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
