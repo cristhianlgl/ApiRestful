@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace ApiRestful.core.Interfaces
 {
-    public interface IUserRepository
+    public interface IRepository<T> where T : BaseEntity
     {
-        Task<IEnumerable<User>> GetAllAsync();
-        Task<User> GetByIdAsync(int id);
-        Task InsertAsync(User post);
-        Task<bool> UpdateAsync(User post);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetByIdAsync(int id);
+        Task InsertAsync(T entity);
+        Task<bool> UpdateAsync(T entity);
         Task<bool> DeleteAsync(int id);
     }
 }

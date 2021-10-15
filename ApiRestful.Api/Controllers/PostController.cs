@@ -52,7 +52,7 @@ namespace ApiRestful.Api.Controllers
         public async Task<IActionResult> UpdatePost(int id, PostDTO postDTO)
         {
             var post = _mapper.Map<Post>(postDTO);
-            post.PostId = id;
+            post.Id = id;
             var result = await _postService.UpdatePostAsync(post);
             var resp = new ResponseApi<bool>(result, result);
             return Ok(resp);

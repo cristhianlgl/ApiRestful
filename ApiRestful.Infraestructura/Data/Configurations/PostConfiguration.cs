@@ -13,11 +13,11 @@ namespace ApiRestful.Infraestructura.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Post> builder)
         {
-            builder.HasKey(e => e.PostId);
+            builder.HasKey(e => e.Id);
 
             builder.ToTable("Publicacion");
 
-            builder.Property(e => e.PostId)
+            builder.Property(e => e.Id)
                 .HasColumnName("IdPublicacion");
 
             builder.Property(e => e.UserId)
