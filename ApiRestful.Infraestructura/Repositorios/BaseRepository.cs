@@ -13,16 +13,16 @@ namespace ApiRestful.Infraestructura.Repositorios
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly ApiRestfulContext _dbContext;
-        private readonly DbSet<T> _entities;
+        protected readonly DbSet<T> _entities;
         public BaseRepository(ApiRestfulContext dbContext)
         {
             _dbContext = dbContext;
             _entities = dbContext.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public IEnumerable<T> GetAll()
         {
-            return await _entities.ToListAsync();
+            return _entities.AsEnumerable();
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -33,22 +33,17 @@ namespace ApiRestful.Infraestructura.Repositorios
         public async Task InsertAsync(T entity)
         {
             await _entities.AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateAsync(T entity)
+        public void Update(T entity)
         {
             _entities.Update(entity);
-            var resul = await _dbContext.SaveChangesAsync();
-            return resul > 0 ? true : false; 
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await GetByIdAsync(id);
             _entities.Remove(entity);
-            var resul = await _dbContext.SaveChangesAsync();
-            return resul > 0 ? true : false;
         }
     }
 }

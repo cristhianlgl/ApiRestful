@@ -12,12 +12,12 @@ namespace ApiRestful.Infraestructura.Repositorios
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApiRestfulContext _context;
-        private readonly IRepository<Post> _postRespository;
+        private readonly IPostRepository _postRespository;
         private readonly IRepository<User> _userRespository;
         private readonly IRepository<Comment> _commentRespository;
 
 
-        public IRepository<Post> PostRepository => _postRespository ?? new BaseRepository<Post>(_context);
+        public IPostRepository PostRepository => _postRespository ?? new PostRepository(_context);
 
         public IRepository<User> UserRepository => _userRespository ?? new BaseRepository<User>(_context);
 

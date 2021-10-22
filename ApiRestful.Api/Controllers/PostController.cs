@@ -53,16 +53,16 @@ namespace ApiRestful.Api.Controllers
         {
             var post = _mapper.Map<Post>(postDTO);
             post.Id = id;
-            var result = await _postService.UpdatePostAsync(post);
-            var resp = new ResponseApi<bool>(result, result);
+            await _postService.UpdatePostAsync(post);
+            var resp = new ResponseApi<bool>(true, true);
             return Ok(resp);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var result = await _postService.DeletePostAsync(id);
-            var resp = new ResponseApi<bool>(result, result);
+            await _postService.DeletePostAsync(id);
+            var resp = new ResponseApi<bool>(true, true);
             return Ok(resp);
         }
     }

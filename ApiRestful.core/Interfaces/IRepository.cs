@@ -9,10 +9,10 @@ namespace ApiRestful.core.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity
     {
-        Task<IEnumerable<T>> GetAllAsync();
+        IEnumerable<T> GetAll();
         Task<T> GetByIdAsync(int id);
         Task InsertAsync(T entity);
-        Task<bool> UpdateAsync(T entity);
-        Task<bool> DeleteAsync(int id);
+        void Update(T entity);
+        Task DeleteAsync(int id);
     }
 }

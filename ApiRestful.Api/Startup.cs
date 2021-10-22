@@ -1,6 +1,7 @@
 using ApiRestful.core.Interfaces;
 using ApiRestful.core.Services;
 using ApiRestful.Infraestructura.Data;
+using ApiRestful.Infraestructura.Filters;
 using ApiRestful.Infraestructura.Repositorios;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -27,7 +28,7 @@ namespace ApiRestful.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddControllers();
+            services.AddControllers( options => options.Filters.Add<GlobalExceptionFilter>());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiRestful.Api", Version = "v1" });
