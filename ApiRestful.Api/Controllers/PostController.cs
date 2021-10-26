@@ -1,11 +1,13 @@
 ﻿using ApiRestful.Api.Responses;
 using ApiRestful.core.DTOs;
 using ApiRestful.core.Entidades;
+using ApiRestful.core.QueryFilters;
 using ApiRestful.core.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace ApiRestful.Api.Controllers
 {
@@ -20,10 +22,13 @@ namespace ApiRestful.Api.Controllers
             _postService = postService;
             _mapper = mapper;
         }
+
         [HttpGet]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ResponseApi<IEnumerable<PostDTO>>))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ResponseApi<IEnumerable<PostDTO>>))]
+        public IActionResult Get([FromQuery]PostFilter postFilter)
         {
-            var posts = await _postService.GetPostsAsync();
+            var posts = _postService.GetPosts(postFilter);
             var postsDTOs = _mapper.Map<IEnumerable<PostDTO>>(posts);
             var resp = new ResponseApi<IEnumerable<PostDTO>>(postsDTOs, true);
             return Ok(resp);
