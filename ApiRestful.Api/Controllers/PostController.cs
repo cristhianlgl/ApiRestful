@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace ApiRestful.Api.Controllers
 {
@@ -31,6 +32,16 @@ namespace ApiRestful.Api.Controllers
             var posts = _postService.GetPosts(postFilter);
             var postsDTOs = _mapper.Map<IEnumerable<PostDTO>>(posts);
             var resp = new ResponseApi<IEnumerable<PostDTO>>(postsDTOs, true);
+            var metadata = new
+            {
+                posts.PageSize,
+                posts.CurrentPage,
+                posts.TotalCount,
+                posts.TotalPages,
+                posts.HasPreviousPage,
+                posts.HasNextPage
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(resp);
         }
 

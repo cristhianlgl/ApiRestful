@@ -1,4 +1,5 @@
 ﻿using ApiRestful.core.Entidades;
+using ApiRestful.core.EntidadesPersonalizadas;
 using ApiRestful.core.Excepciones;
 using ApiRestful.core.Interfaces;
 using ApiRestful.core.QueryFilters;
@@ -24,7 +25,7 @@ namespace ApiRestful.core.Services
             return await _unitOfWork.PostRepository.GetByIdAsync(id);
         }
 
-        public IEnumerable<Post> GetPosts(PostFilter filtro)
+        public PageList<Post> GetPosts(PostFilter filtro)
         {
             var post = _unitOfWork.PostRepository.GetAll();
             if (filtro.IdUsuario != null)
@@ -33,8 +34,8 @@ namespace ApiRestful.core.Services
                 post = post.Where(x => x.Date.ToShortDateString() == filtro.Fecha?.ToShortDateString());
             if(filtro.Descripcion != null)
                 post = post.Where(x => x.Description.ToLower().Contains(filtro.Descripcion.ToLower()));
-
-            return post;
+            var postPageList = PageList<Post>.Create(post, filtro.NumeroPagina, filtro.CantidadPorPagina); 
+            return postPageList;
         }
 
         public async Task InsertPostAsync(Post post)
