@@ -14,6 +14,7 @@ using ApiRestful.Infraestructura.Interfaces;
 
 namespace ApiRestful.Api.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : Controller
@@ -28,9 +29,14 @@ namespace ApiRestful.Api.Controllers
             _uriPostServices = uriPostServices;
         }
 
+        /// <summary>
+        /// Retorna Todos los Post Segun los parametros enviados
+        /// </summary>
+        /// <param name="postFilter">Filtros aplicar sobre los post</param>
+        /// <returns></returns>
         [HttpGet(Name = nameof(Get))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ResponseApi<IEnumerable<PostDTO>>))]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ResponseApi<IEnumerable<PostDTO>>))]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult Get([FromQuery]PostFilter postFilter)
         {
             var posts = _postService.GetPosts(postFilter);
