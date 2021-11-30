@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net;
 using Newtonsoft.Json;
+using ApiRestful.core.EntidadesPersonalizadas;
+using ApiRestful.Infraestructura.Interfaces;
 
 namespace ApiRestful.Api.Controllers
 {
@@ -18,29 +20,33 @@ namespace ApiRestful.Api.Controllers
     {
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
-        public PostController(IPostService postService, IMapper mapper)
+        private readonly IUriPostServices _uriPostServices;
+        public PostController(IPostService postService, IMapper mapper, IUriPostServices uriPostServices)
         {
             _postService = postService;
             _mapper = mapper;
+            _uriPostServices = uriPostServices;
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(Get))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ResponseApi<IEnumerable<PostDTO>>))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(ResponseApi<IEnumerable<PostDTO>>))]
         public IActionResult Get([FromQuery]PostFilter postFilter)
         {
             var posts = _postService.GetPosts(postFilter);
             var postsDTOs = _mapper.Map<IEnumerable<PostDTO>>(posts);
-            var resp = new ResponseApi<IEnumerable<PostDTO>>(postsDTOs, true);
-            var metadata = new
+            var metadata = new Metadata
             {
-                posts.PageSize,
-                posts.CurrentPage,
-                posts.TotalCount,
-                posts.TotalPages,
-                posts.HasPreviousPage,
-                posts.HasNextPage
+                PageSize = posts.PageSize,
+                CurrentPage = posts.CurrentPage,
+                TotalCount = posts.TotalCount,
+                TotalPages = posts.TotalPages,
+                HasPreviousPage = posts.HasPreviousPage,
+                HasNextPage = posts.HasNextPage,
+                NextPageUri = _uriPostServices.GetNextPageUri(postFilter, Url.RouteUrl(nameof(Get))).ToString(),
+                PreviousPageUri = _uriPostServices.GetPreviuosPageUri(postFilter, Url.RouteUrl(nameof(Get))).ToString()
             };
+            var resp = new ResponseApi<IEnumerable<PostDTO>>(postsDTOs, metadata , true);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(resp);
         }

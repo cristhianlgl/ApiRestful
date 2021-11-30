@@ -3,6 +3,7 @@ using ApiRestful.core.EntidadesPersonalizadas;
 using ApiRestful.core.Excepciones;
 using ApiRestful.core.Interfaces;
 using ApiRestful.core.QueryFilters;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace ApiRestful.core.Services
     public class PostService: IPostService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly PaginationOptions _paginationOptions;
 
-        public PostService(IUnitOfWork unitOfWork)
+        public PostService(IUnitOfWork unitOfWork, IOptions<PaginationOptions> options)
         {
             _unitOfWork = unitOfWork;
+            _paginationOptions = options.Value;
         }
 
         public async Task<Post> GetPostAsync(int id)
@@ -27,6 +30,9 @@ namespace ApiRestful.core.Services
 
         public PageList<Post> GetPosts(PostFilter filtro)
         {
+            filtro.CantidadPorPagina = filtro.CantidadPorPagina == 0 ? _paginationOptions.DefaultPageSize : filtro.CantidadPorPagina;
+            filtro.NumeroPagina = filtro.NumeroPagina == 0 ? _paginationOptions.DefaultCurrentPage : filtro.NumeroPagina;
+
             var post = _unitOfWork.PostRepository.GetAll();
             if (filtro.IdUsuario != null)
                 post = post.Where(x => x.UserId == filtro.IdUsuario);
